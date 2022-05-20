@@ -4,7 +4,7 @@
 
 ### installation
 ```shell
-   dart pub global activate eb_clean_cli
+   dart pub global activate -s git https://github.com/kishor98100/eb_clean_cli
 ```
 
 
