@@ -99,13 +99,13 @@ class FlutterCli {
     final res = await _Cmd.run('flutter', ['pub', 'global', 'list'], workingDirectory: cwd);
     if (res.stdout.toString().contains('intl_utils')) {
       check('intl_utils is already activated');
-      _generate(logger);
+      await _generate(logger, cwd);
     } else {
       check('intl_utils not yet activated.');
       final activate = logger.progress('Activating intl_utils');
       await _Cmd.run('flutter', ['pub', 'global', 'activate', 'intl_utils']);
       activate('Activated intl_utils');
-      _generate(logger);
+      await _generate(logger, cwd);
     }
   }
 
@@ -183,12 +183,12 @@ class FlutterCli {
     return results;
   }
 
-  static void _generate(Logger logger) async {
+  static Future<void> _generate(Logger logger, String cwd) async {
     final generate = logger.progress('Running ${lightGreen.wrap('flutter pub global run intl_utils:generate')}');
-    _Cmd.run(
+    await _Cmd.run(
       'flutter',
       ['pub', 'global', 'run', 'intl_utils:generate'],
-      workingDirectory: '.',
+      workingDirectory: cwd,
     );
     generate('Successfully generated localized strings');
   }
@@ -199,5 +199,9 @@ class FlutterCli {
     await _Cmd.run('cp', ['.env.example', '.env-development'], workingDirectory: path);
     await _Cmd.run('cp', ['.env.example', '.env-staging'], workingDirectory: path);
     envCopy('Generated .env files for development, staging and production');
+  }
+
+  static Future<void> runProject({String cwd = '.', String flavor = 'development'}) async {
+    await _Cmd.run('flutter', ['run', '-t', 'lib/main-$flavor.dart', '--flavor', flavor], workingDirectory: cwd);
   }
 }

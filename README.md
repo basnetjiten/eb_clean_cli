@@ -24,7 +24,7 @@ dart pub global activate -s git https://github.com/kishor98100/eb_clean_cli
 After installation, you are good to go
 
 ```shell
-eb_clean --help
+eb_clean
 
 EB Clean Command Line Interface
 
@@ -33,6 +33,16 @@ Usage: eb_clean <command> [arguments]
 Global options:
 -h, --help       Print this usage information.
     --version    Print the current version.
+
+Available commands:
+  create     eb_clean create <output directory>
+             Creates a new flutter project.
+  generate   eb_clean generate <subcommand>
+             Generates features and specific classes
+  packages   eb_clean packages <subcommand>
+             runs packages commands
+  run        eb_clean run <flavor>
+             runs project with  flavor
 
 Run "eb_clean help <command>" for more information about a command.
 ```
@@ -159,6 +169,30 @@ packages command is used to get pub dependencies and run generators
 
  # runs flutter pub run build_runner build --delete-conflicting-outputs in current directory and packages directory
  eb_clean packages build_runner --recursive or eb_clean packages build_runner -r
+```
+
+### eb_clean run
+run the app with specific flavor
+```shell
+runs project with  flavor
+
+Usage: eb_clean run <flavor>
+-h, --help    Print this usage information.
+
+Run "eb_clean help" to see global options.
+```
+#### Usage
+```shell
+#runs project on development flavor
+eb_clean run
+
+#runs project on staging flavor
+eb_clean run staging
+
+#runs project on production flavor
+eb_clean run production
+
+
 ```
 
 ### Templates

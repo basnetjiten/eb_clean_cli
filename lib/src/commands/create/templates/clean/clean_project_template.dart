@@ -31,6 +31,6 @@ class CleanProjectTemplate extends Template {
         .progress('Running ${lightGreen.wrap('flutter pub run build_runner build --delete-conflicting-outputs')}');
     await FlutterCli.runBuildRunner(cwd: outputDirectory.path);
     buildDone('Successfully generated files');
-    await FlutterCli.runIntlUtils(logger: logger);
+    await FlutterCli.runIntlUtils(logger: logger, cwd: outputDirectory.path);
   }
 }

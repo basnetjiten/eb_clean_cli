@@ -8,6 +8,7 @@
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:eb_clean_cli/src/commands/create/create.dart';
+import 'package:eb_clean_cli/src/commands/run/run_command.dart';
 import 'package:mason/mason.dart' hide packageVersion;
 
 import 'commands/generate/generate.dart';
@@ -28,6 +29,7 @@ class EbCleanCommandRunner extends CommandRunner<int> {
     addCommand(CreateCommand(logger: _logger));
     addCommand(GenerateCommand(logger: _logger));
     addCommand(PackagesCommand(_logger));
+    addCommand(RunCommand(_logger));
   }
 
   final Logger _logger;
