@@ -1,13 +1,27 @@
-# eb_clean
+# EB Clean CLI
 
-#### The complete Command Line Interface for creating clean architecture on flutter inspired by very_good_cli
+<img src="./doc/assets/logo-ebpearls.svg">
 
-### installation
+#### The complete Command Line Interface for creating clean architecture on flutter inspired by [Very Good CLI](https://pub.dev/packages/very_good_cli)
+
+This is the refactored version of [Very Good CLI](https://pub.dev/packages/very_good_cli) created to match our company
+standards.
+
+## Getting Started 🚀
+
+**❗ In order to start using EB Clean CLI you must have the [Flutter SDK](https://docs.flutter.dev/get-started/install)
+installed on your
+machine.**
+
+### Installation 💻
+
+For first time users, start by installing the [EB Clean CLI](https://github.com/kishor98100/eb_clean_cli)
+
 ```shell
-   dart pub global activate -s git https://github.com/kishor98100/eb_clean_cli
+dart pub global activate -s git https://github.com/kishor98100/eb_clean_cli
 ```
 
-
+After installation, you are good to go
 
 ```shell
 eb_clean --help
@@ -25,7 +39,9 @@ Run "eb_clean help <command>" for more information about a command.
 
 ### Available commands
 
-- ### create
+## eb_clean create
+
+create a new flutter project based on provided templates, The Clean Architecture is used by default.
 
 ```shell
 Creates a new flutter project.
@@ -42,7 +58,21 @@ Usage: eb_clean create <output directory>
           [very_good]          Creates new project inspired from very_good_cli
 ```
 
-- ### generate
+#### Usage
+
+```shell
+
+ # Create a new flutter app named very_good_app with default template
+ eb_clean create my_app --org com.my_example --desc "new flutter app"  very_good_app
+
+ # Create a new flutter app named very_good_app with template very_good
+ eb_clean create my_app --org com.my_example --desc "new flutter app" --template very_good very_good_app
+
+```
+
+### eb_clean generate
+
+generates feature,repository,source,api,model,cubit,bloc,page in specific feature or directory.
 
 ```shell
 Generates features and specific classes
@@ -64,23 +94,74 @@ Available subcommands:
                creates repository class in repository packages
   source       eb_clean generate source --client <dio,graphql> <name>
                generates source class in specific feature
-
-Run "eb_clean help" to see global options.
 ```
 
-- ### packages
+#### Usage
 
 ```shell
-runs packages commands
+ # generate feature named login with Dio as API client
+ eb_clean generate feature login --client dio
 
-Usage: eb_clean packages <subcommand>
--h, --help    Print this usage information.
+ # generate feature named login with GraphQL as API client
+ eb_clean generate feature login 
 
-Available subcommands:
+ # generate cubit named LoginCubit in login feature
+ eb_clean generate cubit login --feature login
+
+ # generate bloc named LoginBloc in login feature
+ eb_clean generate bloc login --feature login
+
+ # generate repository named LoginRepository's abstract and implementation in login feature
+ eb_clean generate repository login --feature login
+
+ # generate repository named LoginRepository in repository packages in project created using very_good template
+ eb_clean generate repository login --feature login
+
+ # generate source named LoginRemoteSource's abstract and implementation in login feature with Dio as API client
+ eb_clean generate source login --feature login --client dio
+
+ # generate source named LoginRemoteSource's abstract and implementation in login feature with GraphQL as API client
+ eb_clean generate source login --feature login
+
+ # generate api named LoginApi in api package with Dio as API client
+ eb_clean generate api login  --client dio
+
+ # generate api named LoginApi in api package with GraphQL as API client
+ eb_clean generate api login
+```
+
+### eb_clean packages
+
+packages command is used to get pub dependencies and run generators
+
+```shell
+ runs packages commands
+
+ Usage: eb_clean packages <subcommand>
+  Available subcommands:
   build_runner   eb_clean packages build_runner
                  Runs flutter pub run build_runner build --delete-conflicting-outputs in current directory
   get            eb_clean packages get
                  runs flutter pub get in current directory
-
-Run "eb_clean help" to see global options.
 ```
+
+#### Usage
+
+```shell
+ # runs flutter pub get in current directory
+ eb_clean packages get
+
+ # runs flutter pub get in current directory and packages directory 
+ eb_clean packages get --recursive or eb_clean packages get -r
+
+ # runs flutter pub run build_runner build --delete-conflicting-outputs in current directory 
+ eb_clean packages build_runner 
+
+ # runs flutter pub run build_runner build --delete-conflicting-outputs in current directory and packages directory
+ eb_clean packages build_runner --recursive or eb_clean packages build_runner -r
+```
+
+### Templates
+
+- [Clean Architecture](doc/CLEAN_README.md)
+- [Very Good](doc/VERY_GOOD_README.md)
