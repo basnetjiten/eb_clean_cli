@@ -29,12 +29,12 @@ class VeryGoodProjectTemplate extends Template {
     final pubDone = logger.progress('Running flutter pub get...');
     await FlutterCli.pubGet(cwd: outputDirectory.path, recursive: true);
     pubDone();
-    final fixDone = logger.progress('Running ${lightGreen.wrap('dart fix --apply')}');
-    await DartCli.applyFixes(cwd: outputDirectory.path, recursive: true);
-    fixDone();
     final buildDone = logger.progress('Running ${lightGreen.wrap('flutter pub run build_runner build --delete-conflicting-outputs')}');
     await FlutterCli.runBuildRunner(cwd: outputDirectory.path, recursive: true);
     buildDone();
+    final fixDone = logger.progress('Running ${lightGreen.wrap('dart fix --apply')}');
+    await DartCli.applyFixes(cwd: outputDirectory.path, recursive: true);
+    fixDone();
     await FlutterCli.runIntlUtils(logger: logger, cwd: outputDirectory.path);
   }
 }
