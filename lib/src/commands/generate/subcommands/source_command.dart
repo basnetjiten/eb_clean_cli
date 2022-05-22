@@ -5,7 +5,7 @@
  */
 import 'package:args/command_runner.dart';
 import 'package:eb_clean_cli/src/cli/cli.dart';
-import 'package:eb_clean_cli/src/commands/generate/templates/clean/source/source_template.dart';
+import '../templates/clean/source/source_template.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as p;
 import 'package:recase/recase.dart';
@@ -64,9 +64,8 @@ class SourceCommand extends Command<int> {
           'package_name': packageName,
         };
         final cwd = Directory(p.join(Directory.current.path, sourceTemplate.path, '$featureName/data/source'));
-        await sourceGenerator.generate(DirectoryGeneratorTarget(cwd),
-            fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
-        sourceDone('Generated ${sourceName.pascalCase}RemoteSource source in ${sourceTemplate.path}');
+        await sourceGenerator.generate(DirectoryGeneratorTarget(cwd), fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
+        sourceDone('Generated ${sourceName.pascalCase}RemoteSource source in ${cwd.absolute.path}');
         await sourceTemplate.onGenerateComplete(logger, Directory.current);
       } else {
         throw UsageException('please provide source name', usage);
@@ -74,7 +73,6 @@ class SourceCommand extends Command<int> {
       return ExitCode.success.code;
     } else {
       throw UsageException('source is not generated on non clean project', usage);
-      return ExitCode.success.code;
     }
   }
 }

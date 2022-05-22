@@ -6,7 +6,7 @@
 
 import 'dart:io';
 
-import 'package:eb_clean_cli/src/commands/generate/templates/very_good/repository/repository.dart';
+import 'repository.dart';
 import 'package:eb_clean_cli/src/template.dart';
 import 'package:mason_logger/mason_logger.dart';
 
@@ -20,10 +20,5 @@ class RepositoryTemplate extends Template {
         );
 
   @override
-  Future<void> onGenerateComplete(Logger logger, Directory outputDirectory, [bool recursive = false]) async {
-    // final buildDone = logger
-    //     .progress('Running ${lightGreen.wrap('flutter pub run build_runner build --delete-conflicting-outputs')}');
-    // await FlutterCli.runBuildRunner(cwd: outputDirectory.path, recursive: recursive);
-    // buildDone('Successfully generated files');
-  }
+  Future<void> onGenerateComplete(Logger logger, Directory outputDirectory, [bool recursive = false]) async {}
 }

@@ -52,8 +52,7 @@ class ApiCommand extends Command<int> {
           'useDio': client == 'dio',
         };
         final cwd = Directory(p.join(Directory.current.path, apiTemplate.path));
-        await apiGenerator.generate(DirectoryGeneratorTarget(cwd),
-            fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
+        await apiGenerator.generate(DirectoryGeneratorTarget(cwd), fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
         await apiGenerator.hooks.postGen(
           vars: vars,
           onVarsChanged: (v) => vars = v,

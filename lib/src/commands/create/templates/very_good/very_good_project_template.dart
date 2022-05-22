@@ -28,10 +28,13 @@ class VeryGoodProjectTemplate extends Template {
     await FlutterCli.copyEnvs(logger, p.join(outputDirectory.path, 'packages/api/assets/.env'));
     final pubDone = logger.progress('Running flutter pub get...');
     await FlutterCli.pubGet(cwd: outputDirectory.path, recursive: true);
-    pubDone('flutter pub get done');
+    pubDone();
+    final fixDone = logger.progress('Running ${lightGreen.wrap('dart fix --apply')}');
+    await DartCli.applyFixes(cwd: outputDirectory.path, recursive: true);
+    fixDone();
     final buildDone = logger.progress('Running ${lightGreen.wrap('flutter pub run build_runner build --delete-conflicting-outputs')}');
     await FlutterCli.runBuildRunner(cwd: outputDirectory.path, recursive: true);
-    buildDone('Successfully generated files');
+    buildDone();
     await FlutterCli.runIntlUtils(logger: logger, cwd: outputDirectory.path);
   }
 }

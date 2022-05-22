@@ -36,9 +36,9 @@ class GetCommand extends Command<int> {
   Future<int> run() async {
     if (FlutterCli.isFlutterProject()) {
       final recursive = argResults!['recursive'] == true;
-      final pubDone = logger.progress('Running flutter pub run');
+      final pubDone = logger.progress('Running ${lightGray.wrap('flutter pub get')}');
       await FlutterCli.pubGet(cwd: Directory.current.path, recursive: recursive);
-      pubDone('${lightGray.wrap('flutter pub get ')} done');
+      pubDone();
       return ExitCode.success.code;
     } else {
       throw UsageException('packages get only available inside flutter project only', usage);

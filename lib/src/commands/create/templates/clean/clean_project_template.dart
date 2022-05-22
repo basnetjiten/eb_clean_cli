@@ -26,11 +26,13 @@ class CleanProjectTemplate extends Template {
     await FlutterCli.copyEnvs(logger, outputDirectory.path);
     final pubDone = logger.progress('Running flutter pub get in ${outputDirectory.path}');
     await FlutterCli.pubGet(cwd: outputDirectory.path);
-    pubDone('flutter pub get done');
-    final buildDone = logger
-        .progress('Running ${lightGreen.wrap('flutter pub run build_runner build --delete-conflicting-outputs')}');
+    pubDone();
+    final fixDone = logger.progress('Running ${lightGreen.wrap('dart fix --apply')}');
+    await DartCli.applyFixes(cwd: outputDirectory.path, recursive: true);
+    fixDone();
+    final buildDone = logger.progress('Running ${lightGreen.wrap('flutter pub run build_runner build --delete-conflicting-outputs')}');
     await FlutterCli.runBuildRunner(cwd: outputDirectory.path);
-    buildDone('Successfully generated files');
+    buildDone();
     await FlutterCli.runIntlUtils(logger: logger, cwd: outputDirectory.path);
   }
 }

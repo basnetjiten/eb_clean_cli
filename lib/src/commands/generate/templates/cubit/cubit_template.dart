@@ -5,7 +5,7 @@
  */
 import 'dart:io';
 
-import 'package:eb_clean_cli/src/commands/generate/templates/cubit/cubit.dart';
+import 'cubit.dart';
 import 'package:eb_clean_cli/src/template.dart';
 import 'package:mason_logger/mason_logger.dart';
 

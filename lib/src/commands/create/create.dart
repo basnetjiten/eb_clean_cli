@@ -13,7 +13,7 @@ import 'package:mason/mason.dart';
 import 'package:meta/meta.dart';
 import 'package:universal_io/io.dart';
 
-final _description = 'A Clean Project created by EB Clean CLI.';
+final _defaultDescription = 'A Clean Project created by EB Clean CLI.';
 
 /// A method which returns a [Future<MasonGenerator>] given a [MasonBundle].
 typedef GeneratorBuilder = Future<MasonGenerator> Function(MasonBundle);
@@ -29,13 +29,12 @@ final _templates = [CleanProjectTemplate(), VeryGoodProjectTemplate()];
 final _defaultTemplate = _templates.first;
 
 class CreateCommand extends Command<int> {
-  CreateCommand({required this.logger, GeneratorBuilder? generator})
-      : _generator = generator ?? MasonGenerator.fromBundle {
+  CreateCommand({required this.logger, GeneratorBuilder? generator}) : _generator = generator ?? MasonGenerator.fromBundle {
     argParser
       ..addOption(
         'desc',
         abbr: 'd',
-        defaultsTo: 'A Clean Architecture Project Template for Flutter.',
+        defaultsTo: _defaultDescription,
         help: 'The description for this new project',
       )
       ..addOption(
@@ -84,16 +83,14 @@ class CreateCommand extends Command<int> {
   @override
   Future<int> run() async {
     final outputDirectory = _outputDirectory;
-    final projectName = _projectName;
-    final description = _description;
     final template = _template;
     final generateDone = logger.progress('Bootstrapping');
     final generator = await _generator(template.bundle);
     final files = await generator.generate(
       DirectoryGeneratorTarget(outputDirectory),
       vars: <String, dynamic>{
-        'package_name': projectName,
-        'app_description': description,
+        'package_name': _projectName,
+        'app_description': _description,
         'org_name': _orgName,
       },
       fileConflictResolution: FileConflictResolution.overwrite,
@@ -117,7 +114,7 @@ class CreateCommand extends Command<int> {
   }
 
   /// Gets the description for the project.
-  String get _description => _argResults['desc'] as String? ?? '';
+  String get _description => _argResults['desc'] as String? ?? _defaultDescription;
 
   /// Gets the organization name.
   String get _orgName {

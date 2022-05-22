@@ -4,11 +4,9 @@
  * Company: EB Pearls
  *
  */
-import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
-import 'package:eb_clean_cli/src/commands/packages/subcommands/get_command.dart';
+import 'subcommands/get_command.dart';
 import 'package:mason/mason.dart';
-import 'package:meta/meta.dart';
 
 import 'subcommands/build_runner_command.dart';
 
@@ -34,9 +32,4 @@ class PackagesCommand extends Command<int> {
 
   @override
   String get summary => '$invocation\n$description';
-
-  @visibleForTesting
-  ArgResults? argResultsOverrides;
-
-  ArgResults get _argResults => argResultsOverrides ?? argResults!;
 }

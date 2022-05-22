@@ -4,7 +4,6 @@
  * Company: EB Pearls
  *
  */
-import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:eb_clean_cli/src/commands/generate/subcommands/api_command.dart';
 import 'package:eb_clean_cli/src/commands/generate/subcommands/bloc_command.dart';
@@ -14,7 +13,6 @@ import 'package:eb_clean_cli/src/commands/generate/subcommands/page_command.dart
 import 'package:eb_clean_cli/src/commands/generate/subcommands/repository_command.dart';
 import 'package:eb_clean_cli/src/commands/generate/subcommands/source_command.dart';
 import 'package:mason/mason.dart';
-import 'package:meta/meta.dart';
 
 class GenerateCommand extends Command<int> {
   GenerateCommand({required this.logger}) {
@@ -43,9 +41,4 @@ class GenerateCommand extends Command<int> {
 
   @override
   String get summary => '$invocation\n$description';
-
-  @visibleForTesting
-  ArgResults? argResultsOverrides;
-
-  ArgResults get _argResults => argResultsOverrides ?? argResults!;
 }

@@ -9,12 +9,10 @@ import 'dart:async';
 
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart' as p;
-import 'package:pubspec_parse/pubspec_parse.dart';
 import 'package:universal_io/io.dart';
 
 part 'dart_cli.dart';
 part 'flutter_cli.dart';
-part 'git_cli.dart';
 
 /// Abstraction for running commands via command-line.
 class _Cmd {
@@ -52,8 +50,7 @@ class _Cmd {
     List<String> args,
   ) {
     if (pr.exitCode != 0) {
-      final values = {'Standard out': pr.stdout.toString().trim(), 'Standard error': pr.stderr.toString().trim()}
-        ..removeWhere((k, v) => v.isEmpty);
+      final values = {'Standard out': pr.stdout.toString().trim(), 'Standard error': pr.stderr.toString().trim()}..removeWhere((k, v) => v.isEmpty);
 
       var message = 'Unknown error';
       if (values.isNotEmpty) {

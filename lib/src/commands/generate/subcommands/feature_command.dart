@@ -5,9 +5,8 @@
  */
 import 'package:args/command_runner.dart';
 import 'package:eb_clean_cli/src/cli/cli.dart';
-import 'package:eb_clean_cli/src/commands/generate/templates/clean/feature/feature.dart';
-import 'package:eb_clean_cli/src/commands/generate/templates/very_good/feature/very_good_feature_bundle.dart';
-import 'package:eb_clean_cli/src/commands/generate/templates/very_good/feature/very_good_feature_template.dart';
+import '../templates/clean/feature/feature.dart';
+import '../templates/very_good/feature/very_good_feature_template.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as p;
 import 'package:recase/recase.dart';
@@ -58,8 +57,11 @@ class FeatureCommand extends Command<int> {
           'package_name': packageName,
         };
         final cwd = Directory(p.join(Directory.current.path, featureTemplate.path));
-        await featureGenerator.generate(DirectoryGeneratorTarget(cwd),
-            fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
+        await featureGenerator.generate(
+          DirectoryGeneratorTarget(cwd),
+          fileConflictResolution: FileConflictResolution.overwrite,
+          vars: vars,
+        );
         await featureGenerator.hooks.postGen(
           vars: vars,
           onVarsChanged: (v) => vars = v,
@@ -77,22 +79,25 @@ class FeatureCommand extends Command<int> {
         final client = argResults!['client'] as String? ?? 'graphql';
         final featureName = args.first;
         final featureTemplate = VeryGoodFeatureTemplate();
-        final featureDone = logger.progress('Generating ${featureName.pascalCase} feature');
-        final featureGenerator = await MasonGenerator.fromBundle(veryGoodFeatureBundle);
+        final featureDone = logger.progress('Generating ${featureName.pascalCase} feature in ${featureTemplate.path}/$featureName');
+        final featureGenerator = await MasonGenerator.fromBundle(featureTemplate.bundle);
         var vars = <String, dynamic>{
           'name': featureName,
           'useDio': client == 'dio',
           'package_name': packageName,
         };
         final cwd = Directory(p.join(Directory.current.path, featureTemplate.path));
-        await featureGenerator.generate(DirectoryGeneratorTarget(cwd),
-            fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
+        await featureGenerator.generate(
+          DirectoryGeneratorTarget(cwd),
+          fileConflictResolution: FileConflictResolution.overwrite,
+          vars: vars,
+        );
         await featureGenerator.hooks.postGen(
           vars: vars,
           onVarsChanged: (v) => vars = v,
           workingDirectory: p.join(cwd.path, featureName),
         );
-        featureDone('Generated ${featureName.pascalCase} feature in ${featureTemplate.path}');
+        featureDone('Generated ${featureName.pascalCase} feature in ${featureTemplate.path}/$featureName');
         await featureTemplate.onGenerateComplete(logger, Directory.current);
 
         //generating api classes
@@ -104,17 +109,19 @@ class FeatureCommand extends Command<int> {
           'useDio': client == 'dio',
         };
         final apiCwd = Directory(p.join(Directory.current.path, apiTemplate.path));
-        await apiGenerator.generate(DirectoryGeneratorTarget(apiCwd),
-            fileConflictResolution: FileConflictResolution.overwrite, vars: apiVars);
+        await apiGenerator.generate(
+          DirectoryGeneratorTarget(apiCwd),
+          fileConflictResolution: FileConflictResolution.overwrite,
+          vars: apiVars,
+        );
         await apiGenerator.hooks.postGen(
           vars: apiVars,
           onVarsChanged: (v) => apiVars = v,
           workingDirectory: apiCwd.path,
         );
-        apiDone('Generated ${featureName.pascalCase}Api class in ${apiCwd.path}');
+        apiDone('Generated ${featureName.pascalCase}Api class in ${apiTemplate.path}');
 
         // generating repository classes
-
         final repositoryTemplate = RepositoryTemplate();
         final repositoryDone = logger.progress('Generating ${featureName.pascalCase}Repository class');
         final repositoryGenerator = await MasonGenerator.fromBundle(repositoryBundle);
@@ -122,15 +129,17 @@ class FeatureCommand extends Command<int> {
           'name': featureName,
         };
         final repoCwd = Directory(p.join(Directory.current.path, repositoryTemplate.path));
-        await repositoryGenerator.generate(DirectoryGeneratorTarget(repoCwd),
-            fileConflictResolution: FileConflictResolution.overwrite, vars: repoVars);
+        await repositoryGenerator.generate(
+          DirectoryGeneratorTarget(repoCwd),
+          fileConflictResolution: FileConflictResolution.overwrite,
+          vars: repoVars,
+        );
         await repositoryGenerator.hooks.postGen(
           vars: vars,
           onVarsChanged: (v) => repoVars = v,
           workingDirectory: repoCwd.path,
         );
-        repositoryDone('Generated ${featureName.pascalCase}Repository class in ${repoCwd.path}');
-
+        repositoryDone('Generated ${featureName.pascalCase}Repository class in ${repositoryTemplate.path}');
         await repositoryTemplate.onGenerateComplete(logger, Directory.current);
       } else {
         throw UsageException('please provide feature name', usage);

@@ -6,7 +6,7 @@
 
 import 'dart:io';
 
-import 'package:eb_clean_cli/src/commands/generate/templates/page/page_bundle.dart';
+import 'page_bundle.dart';
 import 'package:eb_clean_cli/src/template.dart';
 import 'package:mason_logger/mason_logger.dart';
 

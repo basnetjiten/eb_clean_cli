@@ -5,7 +5,7 @@
  */
 import 'package:args/command_runner.dart';
 import 'package:eb_clean_cli/src/cli/cli.dart';
-import 'package:eb_clean_cli/src/commands/generate/templates/page/page_template.dart';
+import '../templates/page/page_template.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as p;
 import 'package:recase/recase.dart';
@@ -69,14 +69,13 @@ class PageCommand extends Command<int> {
           'feature': featureName,
         };
         final cwd = Directory(p.join(Directory.current.path, path));
-        await pageGenerator.generate(DirectoryGeneratorTarget(cwd),
-            fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
+        await pageGenerator.generate(DirectoryGeneratorTarget(cwd), fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
         await pageGenerator.hooks.postGen(
           vars: vars,
           onVarsChanged: (v) => vars = v,
           workingDirectory: p.join(Directory.current.path, pageTemplate.path, featureName),
         );
-        pageDone('Generated ${pageName.pascalCase}Page class in ${cwd.path}');
+        pageDone('Generated ${pageName.pascalCase}Page class in $path/$featureName');
       } else {
         throw UsageException('please provide bloc name', usage);
       }

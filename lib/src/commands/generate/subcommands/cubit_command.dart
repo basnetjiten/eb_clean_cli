@@ -5,7 +5,7 @@
  */
 import 'package:args/command_runner.dart';
 import 'package:eb_clean_cli/src/cli/cli.dart';
-import 'package:eb_clean_cli/src/commands/generate/templates/cubit/cubit.dart';
+import '../templates/cubit/cubit.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as p;
 import 'package:recase/recase.dart';
@@ -56,8 +56,7 @@ class CubitCommand extends Command<int> {
         'name': blocName,
       };
       final cwd = Directory(p.join(Directory.current.path, path));
-      await blocGenerator.generate(DirectoryGeneratorTarget(cwd),
-          fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
+      await blocGenerator.generate(DirectoryGeneratorTarget(cwd), fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
       blocDone('Generated ${blocName.pascalCase}Cubit class in ${cwd.path}');
     } else {
       throw UsageException('please provide bloc name', usage);

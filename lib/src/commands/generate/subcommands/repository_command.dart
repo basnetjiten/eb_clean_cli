@@ -5,9 +5,9 @@
  */
 import 'package:args/command_runner.dart';
 import 'package:eb_clean_cli/src/cli/cli.dart';
-import 'package:eb_clean_cli/src/commands/generate/templates/clean/repository/clean_repository_bundle.dart';
-import 'package:eb_clean_cli/src/commands/generate/templates/clean/repository/clean_repository_template.dart';
-import 'package:eb_clean_cli/src/commands/generate/templates/very_good/repository/repository.dart';
+import '../templates/clean/repository/clean_repository_bundle.dart';
+import '../templates/clean/repository/clean_repository_template.dart';
+import '../templates/very_good/repository/repository.dart';
 import 'package:mason/mason.dart';
 import 'package:path/path.dart' as p;
 import 'package:recase/recase.dart';
@@ -46,16 +46,14 @@ class RepositoryCommand extends Command<int> {
           'name': repositoryName,
         };
         final cwd = Directory(p.join(Directory.current.path, repositoryTemplate.path));
-        await repositoryGenerator.generate(DirectoryGeneratorTarget(cwd),
-            fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
+        await repositoryGenerator.generate(DirectoryGeneratorTarget(cwd), fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
         await repositoryGenerator.hooks.postGen(
           vars: vars,
           onVarsChanged: (v) => vars = v,
           workingDirectory: cwd.path,
         );
-        repositoryDone('Generated ${repositoryName.pascalCase}Repository class in ${cwd.path}');
-        await repositoryTemplate.onGenerateComplete(
-            logger, Directory(p.join(Directory.current.path, 'packages/repositories/')), false);
+        repositoryDone('Generated ${repositoryName.pascalCase}Repository class in ${repositoryTemplate.path}');
+        await repositoryTemplate.onGenerateComplete(logger, Directory(p.join(Directory.current.path, 'packages/repositories/')), false);
       } else {
         throw UsageException('please provide repository name', usage);
       }
@@ -69,17 +67,19 @@ class RepositoryCommand extends Command<int> {
         } else {
           final featureName = argResults!['feature'] as String;
           final repositoryTemplate = CleanRepositoryTemplate();
-          final repositoryDone =
-              logger.progress('Generating ${repositoryName.pascalCase}Repository\'s abstract and implementation class');
+          final repositoryDone = logger.progress('Generating ${repositoryName.pascalCase}Repository\'s abstract and implementation class');
           final repositoryGenerator = await MasonGenerator.fromBundle(cleanRepositoryBundle);
           var vars = <String, dynamic>{
             'name': repositoryName,
             'package_name': packageName,
           };
           final cwd = Directory(p.join(Directory.current.path, repositoryTemplate.path, '$featureName/'));
-          await repositoryGenerator.generate(DirectoryGeneratorTarget(cwd),
-              fileConflictResolution: FileConflictResolution.overwrite, vars: vars);
-          repositoryDone('Generated ${repositoryName.pascalCase}Repository class in ${cwd.path}');
+          await repositoryGenerator.generate(
+            DirectoryGeneratorTarget(cwd),
+            fileConflictResolution: FileConflictResolution.overwrite,
+            vars: vars,
+          );
+          repositoryDone('Generated ${repositoryName.pascalCase}Repository class in ${cwd.absolute.path}');
           await repositoryTemplate.onGenerateComplete(logger, Directory.current);
         }
       } else {

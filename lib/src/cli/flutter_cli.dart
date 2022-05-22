@@ -23,40 +23,6 @@ class FlutterCli {
     }
   }
 
-  /// Install flutter dependencies (`flutter packages get`).
-  static Future<void> packagesGet({
-    String cwd = '.',
-    bool recursive = false,
-    void Function([String?]) Function(String message)? progress,
-  }) async {
-    await _runCommand(
-      cmd: (cwd) async {
-        final installDone = progress?.call(
-          'Running "flutter packages get" in $cwd',
-        );
-
-        try {
-          await _verifyGitDependencies(cwd);
-        } catch (_) {
-          installDone?.call();
-          rethrow;
-        }
-
-        try {
-          await _Cmd.run(
-            'flutter',
-            ['packages', 'get'],
-            workingDirectory: cwd,
-          );
-        } finally {
-          installDone?.call();
-        }
-      },
-      cwd: cwd,
-      recursive: recursive,
-    );
-  }
-
   /// Install dart dependencies (`flutter pub get`).
   static Future<void> pubGet({
     String cwd = '.',
@@ -107,37 +73,6 @@ class FlutterCli {
       activate('Activated intl_utils');
       await _generate(logger, cwd);
     }
-  }
-
-  static Future<void> removeMainFile(String path) async {
-    final mainFile = Directory(p.join(path, 'lib/'));
-    final testFile = Directory(p.join(path, 'test/'));
-    await _Cmd.run('rm', ['-rf', 'main.dart'], workingDirectory: mainFile.path);
-    await _Cmd.run('rm', ['-rf', 'widget_test.dart'], workingDirectory: testFile.path);
-  }
-
-  /// Ensures all git dependencies are reachable for the pubspec
-  /// located in the [cwd].
-  ///
-  /// If any git dependencies are unreachable,
-  /// an [UnreachableGitDependency] is thrown.
-  static Future<void> _verifyGitDependencies(String cwd) async {
-    final pubspec = Pubspec.parse(
-      await File(p.join(cwd, 'pubspec.yaml')).readAsString(),
-    );
-
-    final dependencies = pubspec.dependencies;
-    final devDependencies = pubspec.devDependencies;
-    final dependencyOverrides = pubspec.dependencyOverrides;
-    final gitDependencies = [...dependencies.entries, ...devDependencies.entries, ...dependencyOverrides.entries]
-        .where((entry) => entry.value is GitDependency)
-        .map((entry) => entry.value)
-        .cast<GitDependency>()
-        .toList();
-
-    await Future.wait(
-      gitDependencies.map((dependency) => Git.reachable(dependency.url)),
-    );
   }
 
   static bool isFlutterProject() {
